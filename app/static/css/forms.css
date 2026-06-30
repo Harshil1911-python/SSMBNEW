@@ -1,0 +1,110 @@
+/* ===== forms.css — appended to or imported alongside theme.css ===== */
+
+/* Drag & drop zone */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.drop-zone.drag-over,
+.drop-zone:hover {
+  border-color: var(--primary);
+  background: var(--secondary);
+}
+.drop-zone-label {
+  font-size: .85rem;
+  color: var(--ink-soft);
+}
+.drop-zone input[type=file] {
+  display: none;
+}
+
+/* Photo preview grid */
+.photo-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.photo-preview-grid img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+}
+
+/* Profile completeness progress */
+.completeness-bar {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--border);
+  overflow: hidden;
+}
+.completeness-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--primary), #42A5F5);
+  transition: width .4s ease;
+}
+
+/* Section dividers for long forms */
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 12px;
+}
+.form-section-header .icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--secondary);
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.form-section-header h6 {
+  margin: 0;
+  font-size: .82rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+.form-section-divider {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Table improvements for admin */
+.admin-table th {
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  font-weight: 600;
+  border-top: none;
+}
+.admin-table td { vertical-align: middle; }
+
+/* Responsive sidebar on mobile */
+@media (max-width: 991px) {
+  .dash-sidebar { display: none; }
+}
+
+/* Action button groups */
+.action-btns .btn { padding: 5px 10px; font-size: .78rem; }
+
+/* QR card for print */
+@media print {
+  .css-navbar, .site-footer, .serenia-watermark, .no-print { display: none !important; }
+  .glass-card, .card-soft { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
