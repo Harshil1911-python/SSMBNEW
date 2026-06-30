@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: citylight-sindhi-samaj-mb
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn wsgi:app --workers=3 --threads=2 --timeout=120"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: citylight-mb-db
+          property: connectionString
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USE_TLS
+        value: "True"
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_DEFAULT_SENDER
+        value: noreply@citylightsindhisamaj.org
+      - key: CACHE_TYPE
+        value: SimpleCache
+      - key: RATELIMIT_STORAGE_URI
+        value: memory://
+    autoDeploy: true
+
+databases:
+  - name: citylight-mb-db
+    plan: free
+    databaseName: citylight_mb
+    user: citylight_mb_user
