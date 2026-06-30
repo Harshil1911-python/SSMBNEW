@@ -1,0 +1,22 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Reports{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Reports</h4>
+<div class="row g-4">
+  {% for title, data in [('Education Distribution', by_education), ('Occupation Distribution', by_occupation),
+    ('City Distribution', by_city), ('Marital Status', by_marital_status), ('Religion', by_religion), ('Blood Group', by_blood_group)] %}
+  <div class="col-md-6">
+    <div class="card-soft p-4">
+      <h6 class="mb-3">{{ title }}</h6>
+      <table class="table table-sm mb-0">
+        {% for key, count in data.items() %}
+        <tr><td>{{ key or 'Unspecified' }}</td><td class="text-end">{{ count }}</td></tr>
+        {% else %}
+        <tr><td class="text-secondary">No data yet.</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

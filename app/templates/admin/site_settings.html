@@ -1,0 +1,33 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Site Settings{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Site Settings &amp; Theme</h4>
+
+<form method="POST" enctype="multipart/form-data">
+  <div class="card-soft p-4 mb-3">
+    <h6 class="mb-3">Branding</h6>
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label">Site Name</label><input class="form-control" name="site_name" value="{{ settings.get('site_name', site_name) }}"></div>
+      <div class="col-md-6"><label class="form-label">City</label><input class="form-control" name="site_city" value="{{ settings.get('site_city', site_city) }}"></div>
+      <div class="col-md-6"><label class="form-label">Primary Color (Light Blue)</label><input type="color" class="form-control form-control-color" name="primary_color" value="{{ settings.get('primary_color', '#1E88E5') }}"></div>
+      <div class="col-md-6"><label class="form-label">Secondary Color</label><input type="color" class="form-control form-control-color" name="secondary_color" value="{{ settings.get('secondary_color', '#E3F2FD') }}"></div>
+      <div class="col-md-6"><label class="form-label">Logo</label><input type="file" class="form-control" name="logo"></div>
+      <div class="col-md-6"><label class="form-label">Home Background</label><input type="file" class="form-control" name="background"></div>
+    </div>
+  </div>
+
+  <div class="card-soft p-4 mb-3">
+    <h6 class="mb-3">Contact</h6>
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label">Contact Email</label><input class="form-control" name="contact_email" value="{{ settings.get('contact_email','') }}"></div>
+      <div class="col-md-6"><label class="form-label">Contact Phone</label><input class="form-control" name="contact_phone" value="{{ settings.get('contact_phone','') }}"></div>
+      <div class="col-12"><label class="form-label">Address</label><textarea class="form-control" name="address" rows="2">{{ settings.get('address','') }}</textarea></div>
+      <div class="col-md-4"><label class="form-label">Facebook URL</label><input class="form-control" name="facebook_url" value="{{ settings.get('facebook_url','') }}"></div>
+      <div class="col-md-4"><label class="form-label">Instagram URL</label><input class="form-control" name="instagram_url" value="{{ settings.get('instagram_url','') }}"></div>
+      <div class="col-md-4"><label class="form-label">WhatsApp Number</label><input class="form-control" name="whatsapp_number" value="{{ settings.get('whatsapp_number','') }}"></div>
+    </div>
+  </div>
+
+  <button class="btn btn-brand btn-lg">Save Settings</button>
+</form>
+{% endblock %}

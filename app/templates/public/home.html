@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ site_name }} — Trusted Sindhi Matrimonial Bureau{% endblock %}
+{% block content %}
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="eyebrow mb-2">Citylight Sindhi Samaj · {{ site_city }}</div>
+        <h1 class="display-5 fw-bold mb-3">Building Sindhi Families,<br>One Match at a Time.</h1>
+        <p class="text-secondary fs-5 mb-4">A community-trusted marriage bureau helping Sindhi families across {{ site_city }} and beyond find compatible, well-matched life partners — with verified profiles and traditional Kundli matching.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{{ url_for('auth.register') }}" class="btn btn-brand btn-lg"><i class="bi bi-person-plus me-1"></i> Register Free</a>
+          <a href="{{ url_for('auth.login') }}" class="btn btn-outline-brand btn-lg">Member / Admin Login</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="row g-3">
+          <div class="col-6"><div class="stat-tile text-center"><div class="stat-number">{{ stats.total }}</div><div class="stat-label">Approved Profiles</div></div></div>
+          <div class="col-6"><div class="stat-tile text-center"><div class="stat-number">{{ stats.male }}</div><div class="stat-label">Grooms</div></div></div>
+          <div class="col-6"><div class="stat-tile text-center"><div class="stat-number">{{ stats.female }}</div><div class="stat-label">Brides</div></div></div>
+          <div class="col-6"><div class="stat-tile text-center"><div class="stat-number">100%</div><div class="stat-label">Community Verified</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <h2 class="text-center mb-1">Why Citylight Sindhi Samaj?</h2>
+  <p class="text-center text-secondary mb-5">Everything a modern marriage bureau needs, rooted in Sindhi tradition.</p>
+  <div class="row g-4">
+    {% for icon, title, desc in [
+      ('bi-shield-check', 'Verified Profiles', 'Every profile is reviewed and approved by the committee before going live.'),
+      ('bi-stars', 'Kundli Matching', 'Traditional Gun Milan compatibility scoring with Manglik checks.'),
+      ('bi-qr-code', 'QR Biodata', 'Instant, scannable QR codes link to a clean public profile view.'),
+      ('bi-file-earmark-pdf', 'Professional Biodata', '10 elegant, print-ready biodata templates generated automatically.')
+    ] %}
+    <div class="col-md-3 col-6">
+      <div class="card-soft p-4 h-100 text-center">
+        <i class="bi {{ icon }}" style="font-size:1.8rem;color:var(--primary);"></i>
+        <h6 class="mt-3 mb-1">{{ title }}</h6>
+        <p class="text-secondary small mb-0">{{ desc }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container pb-5">
+  <div class="glass-card p-5 text-center">
+    <h3 class="mb-2">Ready to find your perfect match?</h3>
+    <p class="text-secondary mb-4">Join hundreds of Sindhi families who trust Citylight Sindhi Samaj.</p>
+    <a href="{{ url_for('auth.register') }}" class="btn btn-brand btn-lg">Start Your Registration</a>
+  </div>
+</section>
+{% endblock %}

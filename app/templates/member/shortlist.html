@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}My Shortlist{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">My Shortlist <span class="text-secondary fs-6">({{ profiles|length }})</span></h4>
+    {% if profiles %}
+    <form method="POST" action="{{ url_for('member.export_selected') }}">
+      {% for p in profiles %}<input type="hidden" name="profile_ids" value="{{ p.id }}">{% endfor %}
+      <button class="btn btn-outline-brand btn-sm"><i class="bi bi-file-earmark-excel"></i> Export to Excel</button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="row g-3">
+    {% for profile in profiles %}
+    <div class="col-md-4 col-sm-6">
+      <div class="card-soft profile-card h-100">
+        <div class="photo-wrap">
+          {% set photo = profile.main_photo %}
+          <img src="{{ url_for('static', filename='uploads/photos/' ~ photo.filename) if photo else url_for('static', filename='img/placeholder.png') }}">
+          <span class="reg-badge">{{ profile.registration_no }}</span>
+        </div>
+        <div class="p-3">
+          <h6 class="mb-1">{{ profile.full_name }}</h6>
+          <p class="small text-secondary mb-2">{{ profile.age or '-' }} yrs • {{ profile.city }}</p>
+          <a href="{{ url_for('profile.view_profile', profile_id=profile.id) }}" class="btn btn-sm btn-brand w-100">View</a>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="col-12"><div class="card-soft p-5 text-center text-secondary">No profiles shortlisted yet.</div></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-2 d-none d-lg-block px-0">
+      <div class="dash-sidebar pt-3">
+        <div class="nav-section-label">Overview</div>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.dashboard' }}" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-grid me-2"></i>Dashboard</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.reports' }}" href="{{ url_for('admin.reports') }}"><i class="bi bi-bar-chart me-2"></i>Reports</a>
+
+        <div class="nav-section-label">Registrations</div>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.registrations' }}" href="{{ url_for('admin.registrations') }}"><i class="bi bi-person-check me-2"></i>Registrations</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.add_person' }}" href="{{ url_for('admin.add_person') }}"><i class="bi bi-person-plus me-2"></i>Add Person</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.trash_bin' }}" href="{{ url_for('admin.trash_bin') }}"><i class="bi bi-trash me-2"></i>Trash Bin</a>
+        <a class="nav-link d-block" href="{{ url_for('profile.view_persons', category='all') }}"><i class="bi bi-people me-2"></i>View Persons</a>
+
+        <div class="nav-section-label">Users</div>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.manage_users' and request.args.get('role','member')=='member' }}" href="{{ url_for('admin.manage_users', role='member') }}"><i class="bi bi-person-badge me-2"></i>Members</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.add_member' }}" href="{{ url_for('admin.add_member') }}" style="padding-left:30px;font-size:.82rem;"><i class="bi bi-plus-circle me-2"></i>Add Member</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.manage_users' and request.args.get('role')=='admin' }}" href="{{ url_for('admin.manage_users', role='admin') }}"><i class="bi bi-shield-lock me-2"></i>Admins</a>
+
+        <div class="nav-section-label">Data</div>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.import_export' }}" href="{{ url_for('admin.import_export') }}"><i class="bi bi-arrow-left-right me-2"></i>Import / Export</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.backup_page' }}" href="{{ url_for('admin.backup_page') }}"><i class="bi bi-hdd-network me-2"></i>Backup &amp; Restore</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.biodata_templates' }}" href="{{ url_for('admin.biodata_templates') }}"><i class="bi bi-file-earmark-richtext me-2"></i>Biodata Templates</a>
+
+        <div class="nav-section-label">Masters</div>
+        {% for table in ['castes','occupations','educations','countries','states','cities','blood_groups','habits','languages'] %}
+        <a class="nav-link d-block small {{ 'active' if request.endpoint=='admin.manage_lookup' and request.view_args and request.view_args.get('table')==table }}" href="{{ url_for('admin.manage_lookup', table=table) }}">{{ table|replace('_',' ')|capitalize }}</a>
+        {% endfor %}
+
+        <div class="nav-section-label">Settings &amp; Logs</div>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.site_settings' }}" href="{{ url_for('admin.site_settings') }}"><i class="bi bi-palette me-2"></i>Site Settings</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.activity_logs' }}" href="{{ url_for('admin.activity_logs') }}"><i class="bi bi-clock-history me-2"></i>Activity Logs</a>
+        <a class="nav-link d-block {{ 'active' if request.endpoint=='admin.login_logs' }}" href="{{ url_for('admin.login_logs') }}"><i class="bi bi-box-arrow-in-right me-2"></i>Login Logs</a>
+      </div>
+    </div>
+    <div class="col-lg-10 py-4">
+      {% block admin_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

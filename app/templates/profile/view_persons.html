@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}View Persons - {{ site_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h4 class="mb-0">View Persons <span class="text-secondary fs-6">({{ pagination.total }} found)</span></h4>
+    <ul class="nav nav-pills">
+      {% for cat in ['all','male','female','single','married','divorced','widow','widower'] %}
+      <li class="nav-item"><a class="nav-link {{ 'active' if category == cat else '' }} btn btn-sm {{ 'btn-brand' if category == cat else 'btn-outline-brand' }} me-1 mb-1"
+        href="{{ url_for('profile.view_persons', category=cat) }}">{{ cat|capitalize }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-3">
+      <div class="card-soft p-3 filter-panel">
+        <h6 class="mb-3"><i class="bi bi-funnel"></i> Advanced Filters</h6>
+        <form method="GET">
+          <input type="hidden" name="category" value="{{ category }}">
+          <div class="mb-2"><label class="form-label">City</label><input class="form-control form-control-sm" name="city" value="{{ filters.get('city','') }}"></div>
+          <div class="mb-2"><label class="form-label">Country</label><input class="form-control form-control-sm" name="country" value="{{ filters.get('country','') }}"></div>
+          <div class="mb-2"><label class="form-label">Caste</label><input class="form-control form-control-sm" name="caste" value="{{ filters.get('caste','') }}"></div>
+          <div class="mb-2"><label class="form-label">Education</label><input class="form-control form-control-sm" name="education" value="{{ filters.get('education','') }}"></div>
+          <div class="mb-2"><label class="form-label">Occupation</label><input class="form-control form-control-sm" name="occupation" value="{{ filters.get('occupation','') }}"></div>
+          <div class="mb-2"><label class="form-label">Blood Group</label><input class="form-control form-control-sm" name="blood_group" value="{{ filters.get('blood_group','') }}"></div>
+          <div class="mb-2"><label class="form-label">Mother Tongue</label><input class="form-control form-control-sm" name="mother_tongue" value="{{ filters.get('mother_tongue','') }}"></div>
+          <div class="mb-2"><label class="form-label">Diet</label>
+            <select class="form-select form-select-sm" name="diet">
+              <option value="">Any</option>
+              <option {{ 'selected' if filters.get('diet')=='Vegetarian' }}>Vegetarian</option>
+              <option {{ 'selected' if filters.get('diet')=='Non Vegetarian' }}>Non Vegetarian</option>
+              <option {{ 'selected' if filters.get('diet')=='Eggitarian' }}>Eggitarian</option>
+            </select>
+          </div>
+          <div class="mb-2"><label class="form-label">Smoking</label>
+            <select class="form-select form-select-sm" name="smoking"><option value="">Any</option><option {{ 'selected' if filters.get('smoking')=='No' }}>No</option><option {{ 'selected' if filters.get('smoking')=='Yes' }}>Yes</option></select>
+          </div>
+          <div class="mb-3"><label class="form-label">Drinking</label>
+            <select class="form-select form-select-sm" name="drinking"><option value="">Any</option><option {{ 'selected' if filters.get('drinking')=='No' }}>No</option><option {{ 'selected' if filters.get('drinking')=='Yes' }}>Yes</option></select>
+          </div>
+          <button class="btn btn-brand btn-sm w-100" type="submit"><i class="bi bi-search"></i> Apply Filters</button>
+          <a href="{{ url_for('profile.view_persons', category=category) }}" class="btn btn-outline-brand btn-sm w-100 mt-2">Clear</a>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <div class="row g-4">
+        {% for profile in pagination.items %}
+        <div class="col-md-4 col-sm-6">
+          <div class="card-soft profile-card h-100">
+            <div class="photo-wrap">
+              {% set photo = profile.main_photo %}
+              <img src="{{ url_for('static', filename='uploads/photos/' ~ photo.filename) if photo else url_for('static', filename='img/placeholder.png') }}" alt="{{ profile.full_name }}">
+              <span class="reg-badge">{{ profile.registration_no }}</span>
+              <span class="match-badge"><i class="bi bi-stars"></i> Profile</span>
+            </div>
+            <div class="p-3">
+              <h6 class="mb-1">{{ profile.full_name }}, {{ profile.age or '-' }}</h6>
+              <p class="small text-secondary mb-2">{{ profile.height_display }} &nbsp;•&nbsp; {{ profile.occupation or '-' }}</p>
+              <p class="small text-secondary mb-3"><i class="bi bi-geo-alt"></i> {{ profile.city }} &nbsp;•&nbsp; <i class="bi bi-mortarboard"></i> {{ profile.education or '-' }}</p>
+              <div class="d-flex flex-wrap gap-1">
+                <a href="{{ url_for('profile.view_profile', profile_id=profile.id) }}" class="btn btn-sm btn-brand flex-fill">View</a>
+                <a href="{{ url_for('profile.download_biodata', profile_id=profile.id, template_slug='classic-blue') }}" class="btn btn-sm btn-outline-brand">Biodata</a>
+                <a href="{{ url_for('profile.view_kundli', profile_id=profile.id) }}" class="btn btn-sm btn-outline-brand">Kundli</a>
+                <a href="{{ url_for('profile.view_qr', profile_id=profile.id) }}" class="btn btn-sm btn-outline-brand">QR</a>
+                {% if current_user.is_member %}
+                <form method="POST" action="{{ url_for('profile.toggle_shortlist', profile_id=profile.id) }}" class="flex-fill">
+                  <button class="btn btn-sm w-100 {{ 'btn-brand' if profile.id in shortlisted_ids else 'btn-outline-brand' }}">
+                    <i class="bi bi-bookmark{{ '-fill' if profile.id in shortlisted_ids else '' }}"></i>
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="col-12"><div class="card-soft p-5 text-center text-secondary">No profiles found matching your filters.</div></div>
+        {% endfor %}
+      </div>
+
+      {% if pagination.pages > 1 %}
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% for p in range(1, pagination.pages + 1) %}
+          <li class="page-item {{ 'active' if p == pagination.page else '' }}">
+            <a class="page-link" href="{{ url_for('profile.view_persons', category=category, page=p, **filters) }}">{{ p }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

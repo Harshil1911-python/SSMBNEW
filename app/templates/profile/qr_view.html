@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}QR Code - {{ profile.full_name }}{% endblock %}
+{% block content %}
+<div class="container py-5 text-center" style="max-width:420px;">
+  <div class="glass-card p-5">
+    <h5 class="mb-3">{{ profile.full_name }}'s QR Code</h5>
+    <img src="{{ url_for('static', filename='uploads/qr/' ~ profile.qr_code_path) }}" class="img-fluid rounded-3 mb-3" style="max-width:260px;">
+    <p class="text-secondary small">Scan to view this profile's public details. No login required.</p>
+    <a href="{{ url_for('static', filename='uploads/qr/' ~ profile.qr_code_path) }}" download class="btn btn-brand"><i class="bi bi-download"></i> Download QR</a>
+  </div>
+</div>
+{% endblock %}

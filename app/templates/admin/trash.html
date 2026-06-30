@@ -1,0 +1,22 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Trash Bin{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Trash Bin <span class="text-secondary fs-6">({{ deleted|length }})</span></h4>
+<div class="card-soft p-3">
+  <table class="table">
+    <thead><tr><th>Reg No</th><th>Name</th><th>Deleted At</th><th>Action</th></tr></thead>
+    <tbody>
+    {% for p in deleted %}
+      <tr>
+        <td>{{ p.registration_no }}</td>
+        <td>{{ p.full_name }}</td>
+        <td>{{ p.deleted_at|dateformat('%d %b %Y %H:%M') }}</td>
+        <td><form method="POST" action="{{ url_for('admin.restore_profile', profile_id=p.id) }}"><button class="btn btn-sm btn-brand"><i class="bi bi-arrow-counterclockwise"></i> Restore</button></form></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="4" class="text-center text-secondary py-4">Trash bin is empty.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

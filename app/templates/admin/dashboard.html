@@ -1,0 +1,68 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Admin Dashboard</h4>
+
+<div class="row g-3 mb-4">
+  {% for label, value in [('Total Profiles', stats.total), ('Male', stats.male), ('Female', stats.female),
+    ('Married', stats.married), ('Single', stats.single), ('Divorced', stats.divorced),
+    ('Pending Approval', stats.pending), ('Approved', stats.approved), ('Rejected', stats.rejected),
+    ("Today's Registrations", stats.today_registrations), ('Members', stats.total_members), ('Admins', stats.total_admins)] %}
+  <div class="col-md-2 col-6"><div class="stat-tile"><div class="stat-number">{{ value }}</div><div class="stat-label">{{ label }}</div></div></div>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card-soft p-4">
+      <h6 class="mb-3">Registrations (Last 6 Months)</h6>
+      <canvas id="regChart" height="120"></canvas>
+    </div>
+
+    <div class="card-soft p-4 mt-4">
+      <h6 class="mb-3">Recent Registrations</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Reg No</th><th>Name</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+        {% for p in recent_registrations %}
+          <tr>
+            <td>{{ p.registration_no }}</td>
+            <td>{{ p.full_name }}</td>
+            <td><span class="badge badge-status-{{ p.status }}">{{ p.status|capitalize }}</span></td>
+            <td>{{ p.created_at|dateformat }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card-soft p-4">
+      <h6 class="mb-3">Recent Activity</h6>
+      {% for log in recent_activity %}
+      <div class="small mb-2 pb-2 border-bottom">
+        <strong>{{ log.user.name if log.user else 'System' }}</strong> — {{ log.action }}
+        <div class="text-secondary" style="font-size:.72rem;">{{ log.created_at|dateformat('%d %b %Y %H:%M') }}</div>
+      </div>
+      {% else %}
+      <p class="text-secondary small">No recent activity.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('regChart'), {
+  type: 'line',
+  data: {
+    labels: {{ chart_labels|tojson }},
+    datasets: [{ label: 'Registrations', data: {{ chart_values|tojson }}, borderColor: '#1E88E5', backgroundColor: 'rgba(30,136,229,.12)', fill: true, tension: .35 }]
+  },
+  options: { plugins: { legend: { display: false } } }
+});
+</script>
+{% endblock %}

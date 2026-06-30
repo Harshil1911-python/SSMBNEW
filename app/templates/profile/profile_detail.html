@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}{{ profile.full_name }} - {{ site_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card-soft p-3 text-center">
+        {% set photo = profile.main_photo %}
+        <img src="{{ url_for('static', filename='uploads/photos/' ~ photo.filename) if photo else url_for('static', filename='img/placeholder.png') }}"
+             class="rounded-4 mb-3 w-100" style="aspect-ratio:4/5;object-fit:cover;">
+        <h4 class="mb-0">{{ profile.full_name }}</h4>
+        <p class="text-secondary small">{{ profile.registration_no }} &nbsp;•&nbsp; {{ profile.bride_or_groom }}</p>
+        <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
+          <a href="{{ url_for('profile.download_biodata', profile_id=profile.id, template_slug='classic-blue') }}" class="btn btn-brand btn-sm"><i class="bi bi-file-earmark-pdf"></i> Biodata PDF</a>
+          <a href="{{ url_for('profile.view_qr', profile_id=profile.id) }}" class="btn btn-outline-brand btn-sm"><i class="bi bi-qr-code"></i> QR</a>
+          <a href="{{ url_for('profile.view_kundli', profile_id=profile.id) }}" class="btn btn-outline-brand btn-sm"><i class="bi bi-stars"></i> Kundli</a>
+          {% if current_user.is_member %}
+          <form method="POST" action="{{ url_for('profile.toggle_shortlist', profile_id=profile.id) }}">
+            <button class="btn btn-sm {{ 'btn-brand' if is_shortlisted else 'btn-outline-brand' }}"><i class="bi bi-bookmark{{ '-fill' if is_shortlisted else '' }}"></i> {{ 'Shortlisted' if is_shortlisted else 'Shortlist' }}</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if profile.photos.count() > 1 %}
+      <div class="card-soft p-3 mt-3">
+        <h6 class="mb-2">Gallery</h6>
+        <div class="row g-2">
+          {% for p in profile.photos %}
+          <div class="col-4"><img src="{{ url_for('static', filename='uploads/photos/' ~ p.filename) }}" class="rounded-3 w-100" style="aspect-ratio:1;object-fit:cover;"></div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card-soft p-4 mb-3">
+        <h6 class="text-uppercase small fw-bold" style="color:var(--primary-dark);">Basic Details</h6>
+        <div class="row small">
+          <div class="col-md-4 mb-2"><strong>Age:</strong> {{ profile.age or '-' }}</div>
+          <div class="col-md-4 mb-2"><strong>Height:</strong> {{ profile.height_display }}</div>
+          <div class="col-md-4 mb-2"><strong>Marital Status:</strong> {{ profile.marital_status }}</div>
+          <div class="col-md-4 mb-2"><strong>Mobile:</strong> {{ profile.mobile or '-' }}</div>
+          <div class="col-md-4 mb-2"><strong>Email:</strong> {{ profile.email or '-' }}</div>
+          <div class="col-md-4 mb-2"><strong>City:</strong> {{ profile.city }}, {{ profile.state }}</div>
+        </div>
+      </div>
+
+      <div class="card-soft p-4 mb-3">
+        <h6 class="text-uppercase small fw-bold" style="color:var(--primary-dark);">Astrology &amp; Caste</h6>
+        <div class="row small">
+          <div class="col-md-3 mb-2"><strong>Caste:</strong> {{ profile.caste or '-' }}</div>
+          <div class="col-md-3 mb-2"><strong>Gotra:</strong> {{ profile.gotra or '-' }}</div>
+          <div class="col-md-3 mb-2"><strong>Rashi:</strong> {{ profile.rashi or '-' }}</div>
+          <div class="col-md-3 mb-2"><strong>Nakshatra:</strong> {{ profile.nakshatra or '-' }}</div>
+          <div class="col-md-3 mb-2"><strong>Mulank:</strong> {{ profile.mulank or '-' }}</div>
+          <div class="col-md-3 mb-2"><strong>Bhagyank:</strong> {{ profile.bhagyank or '-' }}</div>
+          <div class="col-md-3 mb-2"><strong>Manglik:</strong> {{ profile.manglik or '-' }}</div>
+        </div>
+      </div>
+
+      <div class="card-soft p-4 mb-3">
+        <h6 class="text-uppercase small fw-bold" style="color:var(--primary-dark);">Career &amp; Education</h6>
+        <div class="row small">
+          <div class="col-md-6 mb-2"><strong>Education:</strong> {{ profile.education or '-' }}</div>
+          <div class="col-md-6 mb-2"><strong>Occupation:</strong> {{ profile.occupation or '-' }}</div>
+          <div class="col-md-6 mb-2"><strong>Company:</strong> {{ profile.company or '-' }}</div>
+          <div class="col-md-6 mb-2"><strong>Annual Income:</strong> {{ profile.annual_income|currency }}</div>
+        </div>
+      </div>
+
+      <div class="card-soft p-4 mb-3">
+        <h6 class="text-uppercase small fw-bold" style="color:var(--primary-dark);">Family Details</h6>
+        <div class="row small">
+          <div class="col-md-6 mb-2"><strong>Father:</strong> {{ profile.father_name or '-' }} ({{ profile.father_occupation or '-' }})</div>
+          <div class="col-md-6 mb-2"><strong>Mother:</strong> {{ profile.mother_name or '-' }} ({{ profile.mother_occupation or '-' }})</div>
+          <div class="col-md-6 mb-2"><strong>Siblings:</strong> {{ profile.brothers or 0 }} Brother(s), {{ profile.sisters or 0 }} Sister(s)</div>
+          <div class="col-md-6 mb-2"><strong>Family Type:</strong> {{ profile.family_type or '-' }}</div>
+        </div>
+      </div>
+
+      <div class="card-soft p-4 mb-3">
+        <h6 class="text-uppercase small fw-bold" style="color:var(--primary-dark);">About</h6>
+        <p class="small mb-0">{{ profile.about_yourself or 'No description provided.' }}</p>
+      </div>
+
+      <div class="card-soft p-4 mb-3">
+        <h6 class="text-uppercase small fw-bold" style="color:var(--primary-dark);">Partner Preference</h6>
+        <p class="small mb-0">{{ profile.about_desired_partner or 'No preference described.' }}</p>
+      </div>
+
+      {% if current_user.is_member %}
+      <div class="card-soft p-4">
+        <h6 class="text-uppercase small fw-bold" style="color:var(--primary-dark);">Add Note</h6>
+        <form method="POST" action="{{ url_for('profile.add_note', profile_id=profile.id) }}">
+          <textarea name="note" class="form-control mb-2" rows="2" placeholder="Add your remarks..."></textarea>
+          <div class="form-check mb-2"><input type="checkbox" class="form-check-input" name="is_interested" id="interested"><label class="form-check-label small" for="interested">Mark as Interested</label></div>
+          <button class="btn btn-brand btn-sm">Save Note</button>
+        </form>
+        {% if profile.notes.count() %}
+        <hr>
+        {% for n in profile.notes %}
+        <p class="small mb-1"><strong>{{ n.member.name }}:</strong> {{ n.note }} {% if n.is_interested %}<span class="badge badge-status-approved">Interested</span>{% endif %}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Compare Profiles{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h5 class="mb-3"><i class="bi bi-arrow-left-right" style="color:var(--primary);"></i> Compare Profiles</h5>
+
+  {% if profile_a and profile_b %}
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <div class="card-soft p-3 text-center">
+        <h6>{{ profile_a.full_name }}</h6>
+        <p class="small text-secondary mb-0">{{ profile_a.age }} yrs • {{ profile_a.height_display }} • {{ profile_a.city }}</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card-soft p-3 text-center">
+        <h6>{{ profile_b.full_name }}</h6>
+        <p class="small text-secondary mb-0">{{ profile_b.age }} yrs • {{ profile_b.height_display }} • {{ profile_b.city }}</p>
+      </div>
+    </div>
+  </div>
+
+  {% if match %}
+  <div class="card-soft p-4">
+    <div class="text-center mb-3">
+      <div class="stat-number" style="font-size:2.4rem;">{{ match.percentage }}%</div>
+      <p class="text-secondary">{{ match.total }} / {{ match.max_score }} Guna Points — {{ match.verdict }}</p>
+      <span class="badge badge-status-{{ 'approved' if 'Compatible' in match.manglik_status else 'pending' }} px-3 py-2">{{ match.manglik_status }}</span>
+    </div>
+    <table class="table table-sm">
+      <thead><tr><th>Gun (Koota)</th><th>Score</th></tr></thead>
+      <tbody>
+      {% for gun, score in match.scores.items() %}
+        <tr><td>{{ gun }}</td><td>{{ score }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="card-soft p-5 text-center text-secondary">Select two profiles from the View Persons page to compare (use ?a=ID&b=ID).</div>
+  {% endif %}
+</div>
+{% endblock %}

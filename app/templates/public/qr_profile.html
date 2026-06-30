@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ profile.full_name }} — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width:720px;">
+  <div class="glass-card p-4 p-md-5">
+    <div class="text-center mb-4">
+      {% set photo = profile.main_photo %}
+      <img src="{{ url_for('static', filename='uploads/photos/' ~ photo.filename) if photo else url_for('static', filename='img/placeholder.png') }}"
+           class="rounded-circle mb-3" style="width:140px;height:140px;object-fit:cover;border:4px solid var(--secondary);">
+      <h3 class="mb-0">{{ profile.full_name }}</h3>
+      <p class="text-secondary small">Reg. No: {{ profile.registration_no }} &nbsp;•&nbsp; {{ profile.bride_or_groom }}</p>
+    </div>
+
+    <div class="row g-3 text-center mb-4">
+      <div class="col-4"><div class="stat-tile"><div class="stat-number" style="font-size:1.3rem;">{{ profile.age or '-' }}</div><div class="stat-label">Age</div></div></div>
+      <div class="col-4"><div class="stat-tile"><div class="stat-number" style="font-size:1.3rem;">{{ profile.height_display }}</div><div class="stat-label">Height</div></div></div>
+      <div class="col-4"><div class="stat-tile"><div class="stat-number" style="font-size:1.1rem;">{{ profile.city }}</div><div class="stat-label">City</div></div></div>
+    </div>
+
+    <div class="card-soft p-4">
+      <h6 class="mb-3">Public Details</h6>
+      <table class="table table-borderless small mb-0">
+        <tr><td class="text-secondary">Education</td><td>{{ profile.education or '-' }}</td></tr>
+        <tr><td class="text-secondary">Occupation</td><td>{{ profile.occupation or '-' }}</td></tr>
+        <tr><td class="text-secondary">Caste</td><td>{{ profile.caste or '-' }}</td></tr>
+        <tr><td class="text-secondary">Marital Status</td><td>{{ profile.marital_status }}</td></tr>
+        <tr><td class="text-secondary">Mother Tongue</td><td>{{ profile.mother_tongue or '-' }}</td></tr>
+      </table>
+    </div>
+
+    <p class="text-center text-secondary small mt-4 mb-0">
+      <i class="bi bi-lock"></i> Contact details, documents and family information are confidential and visible only to approved {{ site_name }} committee members.
+    </p>
+  </div>
+</div>
+{% endblock %}

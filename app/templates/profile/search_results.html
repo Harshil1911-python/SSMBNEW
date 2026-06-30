@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <form class="d-flex mb-4" method="GET">
+    <input type="text" class="form-control me-2" name="q" value="{{ q }}" placeholder="Search by name, reg no, mobile, education, occupation, city...">
+    <button class="btn btn-brand"><i class="bi bi-search"></i></button>
+  </form>
+  <div class="row g-3">
+    {% for profile in results %}
+    <div class="col-md-4">
+      <div class="card-soft p-3">
+        <h6 class="mb-1">{{ profile.full_name }}</h6>
+        <p class="small text-secondary mb-2">{{ profile.registration_no }} • {{ profile.city }}</p>
+        <a href="{{ url_for('profile.view_profile', profile_id=profile.id) }}" class="btn btn-sm btn-brand">View Profile</a>
+      </div>
+    </div>
+    {% else %}
+    <div class="col-12"><div class="card-soft p-5 text-center text-secondary">{% if q %}No results for "{{ q }}".{% else %}Enter a search term above.{% endif %}</div></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

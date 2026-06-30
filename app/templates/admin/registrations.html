@@ -1,0 +1,44 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Registrations{% endblock %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Registrations</h4>
+  <a href="{{ url_for('admin.add_person') }}" class="btn btn-brand btn-sm"><i class="bi bi-plus-lg"></i> Add Person</a>
+</div>
+
+<ul class="nav nav-pills mb-3">
+  {% for s in ['pending','approved','rejected','all'] %}
+  <li class="nav-item"><a class="btn btn-sm {{ 'btn-brand' if status==s else 'btn-outline-brand' }} me-2" href="{{ url_for('admin.registrations', status=s) }}">{{ s|capitalize }}</a></li>
+  {% endfor %}
+</ul>
+
+<div class="card-soft p-3">
+  <table class="table table-hover align-middle">
+    <thead><tr><th>Reg No</th><th>Name</th><th>Gender</th><th>Mobile</th><th>City</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for p in pagination.items %}
+      <tr>
+        <td>{{ p.registration_no }}</td>
+        <td><a href="{{ url_for('profile.view_profile', profile_id=p.id) }}">{{ p.full_name }}</a></td>
+        <td>{{ p.gender }}</td>
+        <td>{{ p.mobile }}</td>
+        <td>{{ p.city }}</td>
+        <td><span class="badge badge-status-{{ p.status }}">{{ p.status|capitalize }}</span></td>
+        <td>{{ p.created_at|dateformat }}</td>
+        <td class="text-nowrap">
+          {% if p.status != 'approved' %}
+          <form method="POST" action="{{ url_for('admin.approve_registration', profile_id=p.id) }}" class="d-inline"><button class="btn btn-sm btn-outline-brand"><i class="bi bi-check-lg"></i></button></form>
+          {% endif %}
+          {% if p.status != 'rejected' %}
+          <form method="POST" action="{{ url_for('admin.reject_registration', profile_id=p.id) }}" class="d-inline"><button class="btn btn-sm btn-outline-brand"><i class="bi bi-x-lg"></i></button></form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('admin.soft_delete_profile', profile_id=p.id) }}" class="d-inline" data-confirm="Move this profile to trash?"><button class="btn btn-sm btn-outline-brand text-danger"><i class="bi bi-trash"></i></button></form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="8" class="text-center text-secondary py-4">No registrations found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

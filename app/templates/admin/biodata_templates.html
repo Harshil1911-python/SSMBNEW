@@ -1,0 +1,18 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Biodata Templates{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Biodata Templates <span class="text-secondary fs-6">({{ templates|length }} available)</span></h4>
+<div class="row g-3">
+  {% for t in templates %}
+  <div class="col-md-3 col-6">
+    <div class="card-soft p-3 text-center">
+      <div style="height:8px;background:{{ t.accent_color }};border-radius:4px;" class="mb-3"></div>
+      <h6 class="mb-1">{{ t.name }}</h6>
+      <p class="small text-secondary mb-2">{{ t.slug }}</p>
+      <span class="badge {{ 'badge-status-approved' if t.is_active else 'badge-status-rejected' }} mb-2 d-inline-block">{{ 'Active' if t.is_active else 'Inactive' }}</span><br>
+      <form method="POST" action="{{ url_for('admin.toggle_biodata_template', template_id=t.id) }}"><button class="btn btn-sm btn-outline-brand w-100">Toggle</button></form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

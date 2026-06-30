@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  body { font-family: 'DejaVu Sans', sans-serif; color: #0D2A4A; font-size: 11px; }
+  .header { text-align: center; border-bottom: 3px solid #B8860B; padding-bottom: 10px; margin-bottom: 16px; }
+  .header h1 { font-size: 18px; color: #B8860B; margin: 0; }
+  .header .sub { font-size: 10px; color: #4F6B85; }
+  .reg-no { float: right; font-size: 10px; background:#E3F2FD; padding:4px 10px; border-radius:10px; color:#B8860B; }
+  .name-block { text-align: center; margin: 14px 0 18px; }
+  .name-block h2 { margin: 0; font-size: 22px; color: #0D2A4A; }
+  .name-block .role { color: #B8860B; font-weight: bold; font-size: 12px; }
+  table.info { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+  table.info td { padding: 4px 6px; border-bottom: 1px solid #E3F2FD; vertical-align: top; }
+  table.info td.label { width: 36%; font-weight: bold; color: #4F6B85; }
+  .section-title { background: #B8860B; color: #fff; padding: 5px 10px; font-size: 11px; font-weight: bold; border-radius: 4px; margin: 14px 0 6px; }
+  .about { font-size: 10.5px; line-height: 1.5; color: #4F6B85; }
+  .footer { position: fixed; bottom: -8mm; left: 0; right: 0; text-align: center; font-size: 8px; color: #9FB6CC; border-top: 1px solid #E3F2FD; padding-top: 4px; }
+  .watermark { position: fixed; bottom: 4mm; right: 6mm; font-size: 7px; color: #C7DCEF; letter-spacing: .05em; }
+  .photo-box { float: right; width: 95px; height: 120px; border: 3px solid #E3F2FD; object-fit: cover; margin-left: 12px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="reg-no">Reg No: {{ profile.registration_no }}</div>
+    <h1>Citylight Sindhi Samaj</h1>
+    <div class="sub">Marriage Bureau — {{ profile.city }}, Surat</div>
+  </div>
+
+  {% set photo = profile.main_photo %}
+  {% if photo %}
+  <img class="photo-box" src="{{ url_for('static', filename='uploads/photos/' ~ photo.filename, _external=False) }}">
+  {% endif %}
+
+  <div class="name-block" style="text-align:left;">
+    <h2>{{ profile.full_name }}</h2>
+    <span class="role">{{ profile.bride_or_groom }} • {{ profile.marital_status }}</span>
+  </div>
+
+  <div class="section-title">Basic Details</div>
+  <table class="info">
+    <tr><td class="label">Date of Birth</td><td>{{ profile.dob.strftime('%d %b %Y') if profile.dob else '-' }}</td><td class="label">Time of Birth</td><td>{{ profile.time_of_birth or '-' }}</td></tr>
+    <tr><td class="label">Place of Birth</td><td>{{ profile.place_of_birth or '-' }}</td><td class="label">Age</td><td>{{ profile.age or '-' }}</td></tr>
+    <tr><td class="label">Height</td><td>{{ profile.height_display }}</td><td class="label">Blood Group</td><td>{{ profile.blood_group or '-' }}</td></tr>
+    <tr><td class="label">Caste</td><td>{{ profile.caste or '-' }}</td><td class="label">Gotra</td><td>{{ profile.gotra or '-' }}</td></tr>
+    <tr><td class="label">Rashi</td><td>{{ profile.rashi or '-' }}</td><td class="label">Nakshatra</td><td>{{ profile.nakshatra or '-' }}</td></tr>
+  </table>
+
+  <div class="section-title">Family Details</div>
+  <table class="info">
+    <tr><td class="label">Father's Name</td><td>{{ profile.father_name or '-' }}</td><td class="label">Occupation</td><td>{{ profile.father_occupation or '-' }}</td></tr>
+    <tr><td class="label">Mother's Name</td><td>{{ profile.mother_name or '-' }}</td><td class="label">Occupation</td><td>{{ profile.mother_occupation or '-' }}</td></tr>
+    <tr><td class="label">Siblings</td><td>{{ profile.brothers or 0 }} Brother(s), {{ profile.sisters or 0 }} Sister(s)</td><td class="label">Family Type</td><td>{{ profile.family_type or '-' }}</td></tr>
+  </table>
+
+  <div class="section-title">Education &amp; Career</div>
+  <table class="info">
+    <tr><td class="label">Education</td><td>{{ profile.education or '-' }}</td><td class="label">Occupation</td><td>{{ profile.occupation or '-' }}</td></tr>
+    <tr><td class="label">Company</td><td>{{ profile.company or '-' }}</td><td class="label">Annual Income</td><td>{{ profile.annual_income or '-' }}</td></tr>
+  </table>
+
+  <div class="section-title">Contact Details</div>
+  <table class="info">
+    <tr><td class="label">Mobile</td><td>{{ profile.mobile or '-' }}</td><td class="label">Email</td><td>{{ profile.email or '-' }}</td></tr>
+    <tr><td class="label">City</td><td>{{ profile.city }}, {{ profile.state }}</td><td class="label">Country</td><td>{{ profile.country }}</td></tr>
+  </table>
+
+  <div class="section-title">About</div>
+  <p class="about">{{ profile.about_yourself or 'Not provided.' }}</p>
+
+  <div class="footer">Citylight Sindhi Samaj Surat — This biodata is generated electronically and is confidential.</div>
+  <div class="watermark">TECH SERENIA</div>
+</body>
+</html>

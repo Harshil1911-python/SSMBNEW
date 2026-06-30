@@ -1,0 +1,14 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Add Member{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Add New Member</h4>
+<div class="card-soft p-4" style="max-width:500px;">
+  <p class="text-secondary small mb-4">Creates a Member-role account. The member will receive a welcome email with the temporary password <strong>Welcome@123</strong>.</p>
+  <form method="POST">
+    <div class="mb-3"><label class="form-label">Full Name *</label><input class="form-control" name="name" required></div>
+    <div class="mb-3"><label class="form-label">Email Address *</label><input class="form-control" type="email" name="email" required></div>
+    <div class="mb-3"><label class="form-label">Mobile Number</label><input class="form-control" name="mobile"></div>
+    <button class="btn btn-brand w-100">Create Member Account</button>
+  </form>
+</div>
+{% endblock %}

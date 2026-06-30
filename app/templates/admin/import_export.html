@@ -1,0 +1,38 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Import / Export{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Import / Export</h4>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card-soft p-4">
+      <h6 class="mb-3"><i class="bi bi-upload"></i> Import Profiles (CSV / Excel)</h6>
+      <p class="small text-secondary">Upload a CSV or Excel file with profile data. Duplicate mobile numbers are automatically skipped, and an error report is shown for any invalid rows.</p>
+      <a href="{{ url_for('admin.download_csv_template') }}" class="btn btn-sm btn-outline-brand mb-3"><i class="bi bi-download"></i> Download CSV Template</a>
+      <form method="POST" action="{{ url_for('admin.import_csv') }}" enctype="multipart/form-data">
+        <input type="file" class="form-control mb-3" name="csv_file" accept=".csv,.xlsx,.xls" required>
+        <button class="btn btn-brand w-100">Import</button>
+      </form>
+
+      {% if success_count is defined %}
+      <div class="alert alert-info mt-3">Imported: {{ success_count }} | Errors: {{ errors|length }}</div>
+      {% if errors %}
+      <table class="table table-sm small">
+        <thead><tr><th>Row</th><th>Reason</th></tr></thead>
+        <tbody>{% for e in errors %}<tr><td>{{ e.row }}</td><td>{{ e.reason }}</td></tr>{% endfor %}</tbody>
+      </table>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card-soft p-4">
+      <h6 class="mb-3"><i class="bi bi-download"></i> Export Data</h6>
+      <p class="small text-secondary">Export the entire profile database for backup or offline review.</p>
+      <a href="{{ url_for('admin.export_excel') }}" class="btn btn-brand w-100 mb-2">Export to Excel (.xlsx)</a>
+      <a href="{{ url_for('admin.export_csv') }}" class="btn btn-outline-brand w-100">Export to CSV</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

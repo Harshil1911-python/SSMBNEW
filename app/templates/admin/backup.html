@@ -1,0 +1,32 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Backup &amp; Restore{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Backup &amp; Restore</h4>
+
+<div class="card-soft p-4 mb-3">
+  <form method="POST" action="{{ url_for('admin.backup_create') }}">
+    <button class="btn btn-brand"><i class="bi bi-hdd-network"></i> Create New Backup</button>
+  </form>
+</div>
+
+<div class="card-soft p-3">
+  <table class="table align-middle">
+    <thead><tr><th>Backup File</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for b in backups %}
+      <tr>
+        <td>{{ b }}</td>
+        <td>
+          <a href="{{ url_for('admin.backup_download', filename=b) }}" class="btn btn-sm btn-outline-brand"><i class="bi bi-download"></i> Download</a>
+          <form method="POST" action="{{ url_for('admin.backup_restore', filename=b) }}" class="d-inline" data-confirm="Restore master data from this backup?">
+            <button class="btn btn-sm btn-outline-brand"><i class="bi bi-arrow-counterclockwise"></i> Restore</button>
+          </form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="2" class="text-center text-secondary py-4">No backups created yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

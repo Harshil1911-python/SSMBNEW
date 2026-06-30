@@ -1,0 +1,32 @@
+{% extends "admin/_layout.html" %}
+{% block title %}Manage {{ table|replace('_',' ')|capitalize }}{% endblock %}
+{% block admin_content %}
+<h4 class="mb-4">Manage {{ table|replace('_',' ')|capitalize }}</h4>
+
+<div class="card-soft p-4 mb-3">
+  <form method="POST" class="d-flex gap-2">
+    <input type="text" name="name" class="form-control" placeholder="Add new {{ table[:-1] if table.endswith('s') else table }}" required>
+    <button class="btn btn-brand"><i class="bi bi-plus-lg"></i> Add</button>
+  </form>
+</div>
+
+<div class="card-soft p-3">
+  <table class="table align-middle">
+    <thead><tr><th>Name</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td><span class="badge {{ 'badge-status-approved' if item.is_active else 'badge-status-rejected' }}">{{ 'Active' if item.is_active else 'Inactive' }}</span></td>
+        <td>
+          <form method="POST" action="{{ url_for('admin.toggle_lookup', table=table, item_id=item.id) }}" class="d-inline"><button class="btn btn-sm btn-outline-brand">Toggle</button></form>
+          <form method="POST" action="{{ url_for('admin.delete_lookup', table=table, item_id=item.id) }}" class="d-inline" data-confirm="Delete this entry?"><button class="btn btn-sm btn-outline-brand text-danger">Delete</button></form>
+        </td>
+      </tr>
+    {% else %}
+      <tr><td colspan="3" class="text-center text-secondary py-4">No entries yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
